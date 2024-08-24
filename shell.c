@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -10,21 +9,91 @@
 
 extern char **environ;
 
-void set(char *buffer, char ***argv)
+
+char *get_path(void)
 {
-	size_t count = 0;
+        char **env = environ;
+        char *path = NULL;
+
+        while (*env != NULL)
+        {
+                if (strncmp(*env, "PATH=", 5) == 0)
+                {
+                        path = *env + 5;
+                        return (path);
+                }
+
+                env++;
+        }
+        return (NULL);
+}
+
+
+
+char *get_full_path(char *arg)
+{
+
+        char *PATH;
+        char *dir;
+        char *full_path;
+
+        if (get_path() == NULL)
+        {
+                printf("path not foun\n");
+                return (NULL);
+        }
+
+        PATH = strdup(get_path());
+
+        if (access(arg, F_OK) == 0)
+        {
+                full_path = malloc(strlen(arg) + 1);
+                strcpy(full_path, arg);
+                free(PATH);
+                return (full_path);
+        }
+
+        dir = strtok(PATH, ":");
+
+        while (dir)
+        {
+                full_path = malloc(strlen(dir) + strlen(arg) + 2);
+
+                strcpy(full_path, dir);
+                strcat(full_path, "/");
+                strcat(full_path, arg);
+
+                if (access(full_path, F_OK) == 0)
+                {
+                        free(PATH);
+                        return (full_path);
+                }
+                free(full_path);
+                dir = strtok(NULL, ":");
+        }
+
+        printf("program not foun\n");
+        free(PATH);
+        return (NULL);
+}
+
+
+
+void set_argv(char *buffer, char ***argv)
+{
+	size_t argc;
 	size_t i;
 	char *arg;
 	char *copy = strdup(buffer);
 	
 	arg = strtok(copy, " \n");
 	
-	for (count = 0; arg; count++)
+	for (argc = 0; arg; argc++)
 		arg = strtok(NULL, " \n");
 
 	free(copy);
 
-	*argv = malloc(sizeof(char *) * (count + 1));
+	*argv = malloc(sizeof(char *) * (argc + 1));
 
 	arg = strtok(buffer, " \n");
 
@@ -44,12 +113,18 @@ void execute(char **argv)
 	if (argv[0] == NULL)
 		return;
 
+	if (access(argv[0], F_OK) && ((argv[0] = get_full_path(argv[0])) == NULL))
+		return;
+
 	pid = fork();
 
 	if(pid == 0)
 		execve(argv[0], argv, environ);
 	else
+	{
 		wait(NULL);
+		free(argv[0]);
+	}
 }
 
 int main(void)
@@ -68,7 +143,7 @@ int main(void)
 		if (read == -1)
 			break;
 
-		set(buffer, &argv);
+		set_argv(buffer, &argv);
 		execute(argv);
 
 		free(argv);
@@ -76,5 +151,6 @@ int main(void)
 	}
 
 	free(buffer);
+
 	return (0);
 }
