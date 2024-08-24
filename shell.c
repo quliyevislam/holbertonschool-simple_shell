@@ -9,7 +9,6 @@
 
 extern char **environ;
 
-
 char *get_path(void)
 {
         char **env = environ;
@@ -25,7 +24,7 @@ char *get_path(void)
 
                 env++;
         }
-        return (NULL);
+	return (NULL);
 }
 
 
