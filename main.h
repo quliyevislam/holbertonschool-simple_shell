@@ -1,24 +1,28 @@
-#ifndef _SHELL_
-#define _SHELL_
+#ifndef MAINH
+#define MAINH
 
-#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stddef.h>
-#include <sys/wait.h>
 #include <unistd.h>
+#include <sys/wait.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <errno.h>
+#include <dirent.h>
 
+#define MAX_LEN 100
+#define PROMPT ">> "
+#define PATH "PATH="
 extern char **environ;
 
-int main(void);
-char *hshell_readline(void);
-char **hshell_splitline(char *line);
-void hshell_exec(char **args);
-int execbuiltincommands(char **u_tokens);
-void _print_env(void);
-int _atoi(char *s);
-
-
+void handle_command(char *u_command);
+void print_env(void);
+void setup_environment(char **path_env, char **path);
+void execute_command(char **args, char *path);
+void parse_command(char *u_command, char **args);
+void handle_path(char **args, char **path, char **path_env, int *found);
+void process_commands(char *commands, char **commands_array);
+void handle_commands_array(char **commands_array);
 
 #endif
