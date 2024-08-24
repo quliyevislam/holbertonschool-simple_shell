@@ -109,21 +109,24 @@ void set_argv(char *buffer, char ***argv)
 void execute(char **argv)
 {
 	pid_t pid;
+	char *command;
 	
 	if (argv[0] == NULL)
 		return;
+	
+	command = get_full_path(argv[0]);
 
-	if (access(argv[0], F_OK) && ((argv[0] = get_full_path(argv[0])) == NULL))
+	if (command == NULL)
 		return;
 
 	pid = fork();
 
 	if(pid == 0)
-		execve(argv[0], argv, environ);
+		execve(command, argv, environ);
 	else
 	{
 		wait(NULL);
-		free(argv[0]);
+		free(command);
 	}
 }
 
