@@ -72,7 +72,7 @@ char *get_full_path(char *arg)
                 dir = strtok(NULL, ":");
         }
 
-        printf("program not foun\n");
+        printf("not foun\n");
         free(PATH);
         return (NULL);
 }
