@@ -1,102 +1,140 @@
-#include "main.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <sys/wait.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <errno.h>
 
-/**
- * parse_command - func for parsing command
- * @u_command: command to be parsed
- * @args: arguments to command
- */
-void parse_command(char *u_command, char **args)
+extern char **environ;
+
+char *get_path(void)
 {
-	char *command = strtok(u_command, " \t");
-	int i = 0;
-
-	args[0] = NULL;
-	while (command != NULL && i < MAX_LEN - 1)
+	char **env = environ;
+	char *path = NULL;
+	
+	while (*env != NULL)
 	{
-		args[i] = command;
+		if (strncmp(*env, "PATH=", 5) == 0)
+		{
+			path = *env + 5;
+			return (path);
+		}
+
+		env++;
+	}
+
+	return (NULL);
+}
+
+char *get_full_path(char *arg)
+{
+
+	char *PATH;
+	char *dir;
+	char *full_path;
+	
+	if (get_path() == NULL)
+	{
+		printf("path not foun\n");
+		return (NULL);
+	}
+
+	PATH = strdup(get_path());
+	
+	if (access(arg, F_OK) == 0)
+	{
+		full_path = malloc(strlen(arg) + 1);
+		strcpy(full_path, arg);
+		free(PATH);
+		return (full_path);
+	}
+	
+	dir = strtok(PATH, ":");
+
+	while (dir)
+	{
+		full_path = malloc(strlen(dir) + strlen(arg) + 2);
+		
+		strcpy(full_path, dir);
+		strcat(full_path, "/");
+		strcat(full_path, arg);
+		
+		if (access(full_path, F_OK) == 0)
+		{	
+			free(PATH);
+			return (full_path);
+		}
+		free(full_path);
+		dir = strtok(NULL, ":");
+	}
+	
+	printf("program not foun\n");
+	free(PATH);
+	return (NULL);
+}
+
+void set_argv(char buffer[8192], char *argv[8192])
+{
+	size_t i = 0;
+	char *arg;
+
+	arg = strtok(buffer, " \n");
+
+	while (arg)
+	{
+		argv[i] = arg;
+		arg = strtok(NULL, " \n");
 		i++;
-		command = strtok(NULL, " \t");
 	}
-	args[i] = NULL;
+
+	argv[i] = NULL;
 }
 
-/**
- * process_commands - commands processor func
- * @commands: commands
- * @commands_array: array for all commands
- */
-void process_commands(char *commands, char **commands_array)
+void execute(char *argv[8192])
 {
+	pid_t child_pid;
 	char *command;
-	int a = 0;
 
-	command = strtok(commands, "\n");
-	while (command != NULL)
+	if (argv[0] == NULL)
+		return;
+	
+	command = get_full_path(argv[0]);
+
+
+	if (command == NULL)
+		return;
+	
+	child_pid = fork();
+	
+	if (child_pid == 0)
 	{
-		commands_array[a] = command;
-		command = strtok(NULL, "\n");
-		a++;
+		execve(command, argv, environ);
 	}
-	commands_array[a] = NULL;
-}
-
-/**
- * handle_commands_array - func for handling array of commands
- * @commands_array: array of commands
- */
-void handle_commands_array(char **commands_array)
-{
-	int a = 0;
-	char *command;
-
-	if (strcmp(commands_array[a], "exit") == 0)
-		exit(0);
-	else if (strcmp(commands_array[a], "env") == 0)
-		print_env();
 	else
-		while (commands_array[a] != NULL)
-		{
-			command = commands_array[a];
-			if (strcmp(command, "exit") == 0 && a > 0)
-				exit(2);
-			handle_command(command);
-			a++;
-		}
+	{
+		wait(NULL);
+		free(command);
+	}
 }
 
-/**
- * handle_path - func for handling path
- * @args: arguments to path
- * @path: path
- * @path_env: environment path
- * @found: int variable
- */
-void handle_path(char **args, char **path, char **path_env, int *found)
+int main(void)
 {
-	char *path_token = NULL;
+	char *argv[8192];
+	char buffer[8192];
+	ssize_t Read;
 
-	if (*path_env == NULL)
+	while (1)
 	{
-		fprintf(stderr, "./hsh: 1: %s: not found\n", args[0]);
-		free(*path_env);
-		free(*path);
-		exit(127);
-	}
-	path_token = strtok(*path_env, ":");
+		Read = read(STDIN_FILENO, buffer, 8192 - 1);
+		buffer[Read] = '\0';
 
-	while (path_token != NULL)
-	{
-		strcpy(*path, path_token);
-		strcat(*path, "/");
-		strcat(*path, args[0]);
-		if (access(*path, X_OK) != -1)
-		{
-			*found = 1;
+		if (Read == 0)
 			break;
-		}
-		path_token = strtok(NULL, ":");
+
+		set_argv(buffer, argv);
+		execute(argv);
 	}
-	free(*path_env);
+	return (0);
 }
-
-
