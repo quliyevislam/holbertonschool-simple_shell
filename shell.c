@@ -1,3 +1,4 @@
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -9,132 +10,71 @@
 
 extern char **environ;
 
-char *get_path(void)
+void set(char *buffer, char ***argv)
 {
-	char **env = environ;
-	char *path = NULL;
-	
-	while (*env != NULL)
-	{
-		if (strncmp(*env, "PATH=", 5) == 0)
-		{
-			path = *env + 5;
-			return (path);
-		}
-
-		env++;
-	}
-
-	return (NULL);
-}
-
-char *get_full_path(char *arg)
-{
-
-	char *PATH;
-	char *dir;
-	char *full_path;
-	
-	if (get_path() == NULL)
-	{
-		printf("path not foun\n");
-		return (NULL);
-	}
-
-	PATH = strdup(get_path());
-	
-	if (access(arg, F_OK) == 0)
-	{
-		full_path = malloc(strlen(arg) + 1);
-		strcpy(full_path, arg);
-		free(PATH);
-		return (full_path);
-	}
-	
-	dir = strtok(PATH, ":");
-
-	while (dir)
-	{
-		full_path = malloc(strlen(dir) + strlen(arg) + 2);
-		
-		strcpy(full_path, dir);
-		strcat(full_path, "/");
-		strcat(full_path, arg);
-		
-		if (access(full_path, F_OK) == 0)
-		{	
-			free(PATH);
-			return (full_path);
-		}
-		free(full_path);
-		dir = strtok(NULL, ":");
-	}
-	
-	printf("program not foun\n");
-	free(PATH);
-	return (NULL);
-}
-
-void set_argv(char buffer[8192], char *argv[8192])
-{
-	size_t i = 0;
+	size_t count = 0;
+	size_t i;
 	char *arg;
+	char *copy = strdup(buffer);
+	
+	arg = strtok(copy, " \n");
+	
+	for (count = 0; arg; count++)
+		arg = strtok(NULL, " \n");
+
+	free(copy);
+
+	*argv = malloc(sizeof(char *) * (count + 1));
 
 	arg = strtok(buffer, " \n");
 
-	while (arg)
+	for(i = 0; arg; i++)
 	{
-		argv[i] = arg;
+		(*argv)[i] = arg;
 		arg = strtok(NULL, " \n");
-		i++;
 	}
 
-	argv[i] = NULL;
+		(*argv)[i]= NULL;
 }
 
-void execute(char *argv[8192])
+void execute(char **argv)
 {
-	pid_t child_pid;
-	char *command;
-
+	pid_t pid;
+	
 	if (argv[0] == NULL)
 		return;
-	
-	command = get_full_path(argv[0]);
 
+	pid = fork();
 
-	if (command == NULL)
-		return;
-	
-	child_pid = fork();
-	
-	if (child_pid == 0)
-	{
-		execve(command, argv, environ);
-	}
+	if(pid == 0)
+		execve(argv[0], argv, environ);
 	else
-	{
 		wait(NULL);
-		free(command);
-	}
 }
 
 int main(void)
 {
-	char *argv[8192];
-	char buffer[8192];
-	ssize_t Read;
+	char *buffer;
+	char **argv;
+	size_t size;
+	ssize_t read;
 
 	while (1)
 	{
-		Read = read(STDIN_FILENO, buffer, 8192 - 1);
-		buffer[Read] = '\0';
-
-		if (Read == 0)
+		buffer = NULL;
+		size = 0;
+		read = getline(&buffer, &size, stdin);
+	
+		if (read == -1)
 			break;
 
-		set_argv(buffer, argv);
+		set(buffer, &argv);
 		execute(argv);
+
+		free(argv);
+		free(buffer);
 	}
+
+	free(buffer);
 	return (0);
 }
