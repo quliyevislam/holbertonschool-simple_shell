@@ -74,6 +74,7 @@ char *get_full_path(char *arg)
 
 	fprintf(stderr, "./hsh: 1: %s: not found\n", arg);
         free(PATH);
+	exit(127);
         return (NULL);
 }
 
