@@ -30,7 +30,7 @@ char *get_path(void)
 
 
 
-char *get_full_path(char *arg)
+char *get_full_path(char *arg, int *status)
 {
 
         char *PATH;
@@ -73,8 +73,8 @@ char *get_full_path(char *arg)
         }
 
 	fprintf(stderr, "./hsh: 1: %s: not found\n", arg);
-        free(PATH);
-	exit(127);
+        *status = 127;
+	free(PATH);
         return (NULL);
 }
 
@@ -107,7 +107,7 @@ void set_argv(char *buffer, char ***argv)
 		(*argv)[i]= NULL;
 }
 
-void execute(char **argv)
+void execute(char **argv, int *status)
 {
 	pid_t pid;
 	char *command;
@@ -115,7 +115,7 @@ void execute(char **argv)
 	if (argv[0] == NULL)
 		return;
 	
-	command = get_full_path(argv[0]);
+	command = get_full_path(argv[0], status);
 
 	if (command == NULL)
 		return;
@@ -137,6 +137,7 @@ int main(void)
 	char **argv;
 	size_t size;
 	ssize_t read;
+	int status = 0;
 
 	while (1)
 	{
@@ -148,7 +149,7 @@ int main(void)
 			break;
 
 		set_argv(buffer, &argv);
-		execute(argv);
+		execute(argv, &status);
 
 		free(argv);
 		free(buffer);
@@ -156,5 +157,5 @@ int main(void)
 
 	free(buffer);
 
-	return (0);
+	exit(status);
 }
