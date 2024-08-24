@@ -8,8 +8,8 @@
 #include <errno.h>
 
 extern char **environ;
-/*char *environ[] = {"WORKING_DIR=/home/student_jail/student_repo\n", "HOSTNAME=e5cd365cf38e\n", "PATH1=/home/student_jail/student_repo\n"};*/
-/*char **environ = NULL;*/
+/*char *environ[] = {"WORKING_DIR=/home/student_jail/student_repo\n", "HOSTNAME=e5cd365cf38e\n", "PATH1=/home/student_jail/student_repo\n"};
+char **environ = NULL;*/
 char *get_path(void)
 {
         char **env = environ;
@@ -40,15 +40,6 @@ char *get_full_path(char *arg, int *status)
         char *dir;
         char *full_path;
 
-	if (get_path() == NULL)
-        {
-                fprintf(stderr, "./hsh: 1: %s: not found\n", arg);
-                *status = 127;
-                return (NULL);
-        }
-
-        /*PATH = strdup(get_path());     */ 
-       
 	if (access(arg, F_OK) == 0)
         {
                 full_path = malloc(strlen(arg) + 1);
@@ -56,6 +47,14 @@ char *get_full_path(char *arg, int *status)
                 return (full_path);
         }
 	
+	if (get_path() == NULL)
+        {
+                fprintf(stderr, "./hsh: 1: %s: not found\n", arg);
+                *status = 127;
+                return (NULL);
+        }
+
+
 
 	PATH = strdup(get_path());
 
