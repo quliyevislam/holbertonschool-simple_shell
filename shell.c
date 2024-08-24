@@ -72,7 +72,7 @@ char *get_full_path(char *arg)
                 dir = strtok(NULL, ":");
         }
 
-	fprintf(stderr, "./hsh: 1: %s: not found\n", args[0]);
+	fprintf(stderr, "./hsh: 1: %s: not found\n", arg);
         free(PATH);
         return (NULL);
 }
