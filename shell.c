@@ -37,23 +37,22 @@ char *get_full_path(char *arg, int *status)
         char *dir;
         char *full_path;
 
-        if (get_path() == NULL)
-        {
-                printf("path not foun\n");
-                return (NULL);
-        }
-
-        PATH = strdup(get_path());
-
         if (access(arg, F_OK) == 0)
         {
                 full_path = malloc(strlen(arg) + 1);
                 strcpy(full_path, arg);
-                free(PATH);
                 return (full_path);
         }
+	
+	if (get_path() == NULL)
+	{
+		printf("path not foun\n");
+		return (NULL);
+	}
+	
+	PATH = strdup(get_path());
 
-        dir = strtok(PATH, ":");
+	dir = strtok(PATH, ":");
 
         while (dir)
         {
