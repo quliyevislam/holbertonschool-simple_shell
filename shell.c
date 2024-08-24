@@ -47,7 +47,7 @@ char *get_full_path(char *arg, int *status)
                 return (NULL);
         }
 
-        PATH = strdup(get_path());       
+        /*PATH = strdup(get_path());     */ 
        
 	if (access(arg, F_OK) == 0)
         {
