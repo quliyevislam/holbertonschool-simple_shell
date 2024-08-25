@@ -128,7 +128,13 @@ void set_argv(char *buffer, char ***argv)
 
 		(*argv)[i]= NULL;
 }
-
+/**
+ * execute - executes the given program
+ *
+ * @argv: argument vector
+ * @status: variable for exit status
+ *
+ */
 void execute(char **argv, int *status)
 {
 	pid_t pid;
