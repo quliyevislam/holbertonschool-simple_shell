@@ -35,7 +35,6 @@ return (NULL);
 
 /**
  * get_full_path - finds the full path of given command
- *
  * @arg: the given argumnet
  * @status: variable for the exit status
  *
@@ -43,30 +42,23 @@ return (NULL);
  */
 char *get_full_path(char *arg, int *status)
 {
-
-        char *PATH;
-        char *dir;
-        char *full_path;
-
-	if (access(arg, F_OK) == 0)
-        {
-                full_path = malloc(strlen(arg) + 1);
-                strcpy(full_path, arg);
-                return (full_path);
-        }
-	
-	if (get_path() == NULL)
-        {
-                fprintf(stderr, "./hsh: 1: %s: not found\n", arg);
-                *status = 127;
-                return (NULL);
-        }
-
-
-
-	PATH = strdup(get_path());
-
-	dir = strtok(PATH, ":");
+char *PATH;
+char *dir;
+char *full_path;
+if (access(arg, F_OK) == 0)
+{
+full_path = malloc(strlen(arg) + 1);
+strcpy(full_path, arg);
+return (full_path);
+}	
+if (get_path() == NULL)
+{
+fprintf(stderr, "./hsh: 1: %s: not found\n", arg);
+*status = 127;
+return (NULL);
+}
+PATH = strdup(get_path());
+dir = strtok(PATH, ":");
 
         while (dir)
         {
