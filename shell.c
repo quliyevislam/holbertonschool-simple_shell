@@ -42,11 +42,11 @@ char *get_path(void)
  */
 char *get_full_path(char *arg, int *status)
 {
-char *PATH;
-char *dir;
-char *full_path;
-if (access(arg, F_OK) == 0)
-{
+	char *PATH;
+	char *dir;
+	char *full_path;
+	if (access(arg, F_OK) == 0)
+	{
 full_path = malloc(strlen(arg) + 1);
 strcpy(full_path, arg);
 return (full_path);
