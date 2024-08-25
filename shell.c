@@ -80,7 +80,7 @@ return (NULL);
 }
 
 /**
- * set_arg - sets the buffer to the argument vector
+ * set_argv - sets the buffer to the argument vector
  * @buffer: given buffer to set
  * @argv: the ageument vector to set buffers to
  */
