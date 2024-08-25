@@ -37,7 +37,14 @@ char *get_path(void)
 }
 
 
-
+/**
+ * get_full_path - finds the full path of given command
+ *
+ * @arg: the given argumnet
+ * @status: variable for the exit status
+ *
+ * Return: full path os the given command
+ */
 char *get_full_path(char *arg, int *status)
 {
 
