@@ -6,8 +6,8 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <errno.h>
+#include "main.h"
 
-extern char **environ;
 
 /**
  * get_path - returns the PATH
