@@ -8,8 +8,13 @@
 #include <errno.h>
 
 extern char **environ;
-/*char *environ[] = {"WORKING_DIR=/home/student_jail/student_repo\n", "HOSTNAME=e5cd365cf38e\n", "PATH1=/home/student_jail/student_repo\n"};
-char **environ = NULL;*/
+
+/**
+ * get_path - returns the PATH
+ * 
+ * Return: the path
+ *
+ */
 char *get_path(void)
 {
         char **env = environ;
