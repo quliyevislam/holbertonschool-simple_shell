@@ -50,7 +50,7 @@ if (access(arg, F_OK) == 0)
 full_path = malloc(strlen(arg) + 1);
 strcpy(full_path, arg);
 return (full_path);
-}	
+}
 if (get_path() == NULL)
 {
 fprintf(stderr, "./hsh: 1: %s: not found\n", arg);
@@ -96,12 +96,12 @@ arg = strtok(NULL, " \n");
 free(copy);
 *argv = malloc(sizeof(char *) * (argc + 1));
 arg = strtok(buffer, " \n");
-for(i = 0; arg; i++)
+for (i = 0; arg; i++)
 {
 (*argv)[i] = arg;
 arg = strtok(NULL, " \n");
 }
-(*argv)[i]= NULL;
+(*argv)[i] = NULL;
 }
 /**
  * execute - executes the given program
