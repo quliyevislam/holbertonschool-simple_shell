@@ -130,33 +130,27 @@ free(command);
 /**
  * main - the main function
  *
- *Return: exit status
+ * Return: exit status
  */
 int main(void)
 {
-	char *buffer;
-	char **argv;
-	size_t size;
-	ssize_t read;
-	int status = 0;
-
-	while (1)
-	{
-		buffer = NULL;
-		size = 0;
-		read = getline(&buffer, &size, stdin);
-	
-		if (read == -1)
-			break;
-
-		set_argv(buffer, &argv);
-		execute(argv, &status);
-
-		free(argv);
-		free(buffer);
-	}
-
-	free(buffer);
-
-	exit(status);
+char *buffer;
+char **argv;
+size_t size;
+ssize_t read;
+int status = 0;
+while (1)
+{
+buffer = NULL;
+size = 0;
+read = getline(&buffer, &size, stdin);
+if (read == -1)
+break;
+set_argv(buffer, &argv);
+execute(argv, &status);
+free(argv);
+free(buffer);
+}
+free(buffer);
+exit(status);
 }
