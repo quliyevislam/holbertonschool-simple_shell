@@ -158,7 +158,11 @@ void execute(char **argv, int *status)
 		free(command);
 	}
 }
-
+/**
+ * main - the main function
+ *
+ *Return: exit status
+ */
 int main(void)
 {
 	char *buffer;
