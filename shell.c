@@ -51,12 +51,12 @@ char *get_full_path(char *arg, int *status)
 	strcpy(full_path, arg);
 	return (full_path);
 	}
-if (get_path() == NULL)
-{
-fprintf(stderr, "./hsh: 1: %s: not found\n", arg);
-*status = 127;
-return (NULL);
-}
+	if (get_path() == NULL)
+	{
+	fprintf(stderr, "./hsh: 1: %s: not found\n", arg);
+	*status = 127;
+	return (NULL);
+	}
 PATH = strdup(get_path());
 dir = strtok(PATH, ":");
 while (dir)
