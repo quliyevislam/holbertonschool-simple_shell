@@ -79,38 +79,29 @@ free(PATH);
 return (NULL);
 }
 
-
 /**
  * set_arg - sets the buffer to the argument vector
  * @buffer: given buffer to set
  * @argv: the ageument vector to set buffers to
- *
  */
 void set_argv(char *buffer, char ***argv)
 {
-	size_t argc;
-	size_t i;
-	char *arg;
-	char *copy = strdup(buffer);
-	
-	arg = strtok(copy, " \n");
-	
-	for (argc = 0; arg; argc++)
-		arg = strtok(NULL, " \n");
-
-	free(copy);
-
-	*argv = malloc(sizeof(char *) * (argc + 1));
-
-	arg = strtok(buffer, " \n");
-
-	for(i = 0; arg; i++)
-	{
-		(*argv)[i] = arg;
-		arg = strtok(NULL, " \n");
-	}
-
-		(*argv)[i]= NULL;
+size_t argc;
+size_t i;
+char *arg;
+char *copy = strdup(buffer);
+arg = strtok(copy, " \n");
+for (argc = 0; arg; argc++)
+arg = strtok(NULL, " \n");
+free(copy);
+*argv = malloc(sizeof(char *) * (argc + 1));
+arg = strtok(buffer, " \n");
+for(i = 0; arg; i++)
+{
+(*argv)[i] = arg;
+arg = strtok(NULL, " \n");
+}
+(*argv)[i]= NULL;
 }
 /**
  * execute - executes the given program
