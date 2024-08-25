@@ -47,10 +47,10 @@ char *get_full_path(char *arg, int *status)
 	char *full_path;
 	if (access(arg, F_OK) == 0)
 	{
-full_path = malloc(strlen(arg) + 1);
-strcpy(full_path, arg);
-return (full_path);
-}
+	full_path = malloc(strlen(arg) + 1);
+	strcpy(full_path, arg);
+	return (full_path);
+	}
 if (get_path() == NULL)
 {
 fprintf(stderr, "./hsh: 1: %s: not found\n", arg);
