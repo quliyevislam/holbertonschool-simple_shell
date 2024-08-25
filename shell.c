@@ -96,7 +96,12 @@ char *get_full_path(char *arg, int *status)
 }
 
 
-
+/**
+ * set_arg - sets the buffer to the argument vector
+ * @buffer: given buffer to set
+ * @argv: the ageument vector to set buffers to
+ *
+ */
 void set_argv(char *buffer, char ***argv)
 {
 	size_t argc;
