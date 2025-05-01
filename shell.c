@@ -41,7 +41,7 @@ char **string_to_words_array(char *line)
 	}
 	free(line_copy);
 
-	argv = calloc(sizeof(char *), argc + 1);
+	argv = malloc(sizeof(char *) * (argc + 1));
 	arg = strtok(line, " \n");
 	for (i = 0; i < argc; i++)
 	{
