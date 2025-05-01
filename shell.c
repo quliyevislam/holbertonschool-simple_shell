@@ -16,7 +16,7 @@ void fork_and_execute(char **argv)
 	pid = fork();
 	if (pid == 0)
 	{
-		execve(argv[0], argv, NULL);
+		execve(argv[0], argv, environ);
 	}
 	else
 	{
@@ -64,6 +64,7 @@ int main(void)
 		line = NULL;
 		argv = NULL;
 		input_length = getline(&line, &buffer_length, stdin);
+
 		if (input_length == -1)
 		{
 			free(line);
@@ -77,7 +78,7 @@ int main(void)
 			continue;
 		}
 		fork_and_execute(argv);
-
+		
 		free(argv);
 		free(line);
 	}
