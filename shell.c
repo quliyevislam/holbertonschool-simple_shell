@@ -41,14 +41,14 @@ char **string_to_words_array(char *line)
 	}
 	free(line_copy);
 
-	argv = malloc(sizeof(char *) * argc);
+	argv = calloc(sizeof(char *), argc + 1);
 	arg = strtok(line, " \n");
 	for (i = 0; i < argc; i++)
 	{
 		*(argv + i) = arg;
 		arg = strtok(NULL, " \n");
 	}
-
+	argv[i] = NULL;
 	return (argv);
 }
 
@@ -70,6 +70,12 @@ int main(void)
 			break;
 		}
 		argv = string_to_words_array(line);
+		if (*argv == NULL)
+		{
+			free(argv);
+			free(line);
+			continue;
+		}
 		fork_and_execute(argv);
 
 		free(argv);
