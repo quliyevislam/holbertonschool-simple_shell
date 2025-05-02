@@ -8,6 +8,7 @@
 #include <errno.h>
 #include "main.h"
 
+
 char *get_path(void)
 {
 	char **env = environ;
