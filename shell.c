@@ -123,7 +123,8 @@ char **string_to_words_array(char *line, int *status)
 		*(argv + i) = arg;
 		arg = strtok(NULL, " \n");
 	}
-	argv[i] = NULL;
+
+	argv[i] = NULL;	
 	if (strcmp(argv[i - 1], "exit") == 0)
 		*status = 2;
 
@@ -143,7 +144,6 @@ int main(void)
 		line = NULL;
 		argv = NULL;
 		input_length = getline(&line, &buffer_length, stdin);
-
 		if (input_length == -1)
 		{
 			free(line);
@@ -158,7 +158,6 @@ int main(void)
 		if (strcmp(argv[0], "exit") == 0)
 		{
 			free(argv), free(line);
-			status = 0;
 			break;
 		}
 		argv[0] = search_path_for_command(argv[0], &status);
