@@ -41,6 +41,11 @@ char **string_to_words_array(char *line)
 	}
 	free(line_copy);
 
+	if (argc == 0)
+	{
+		return (NULL);
+	}
+
 	argv = malloc(sizeof(char *) * (argc + 1));
 	arg = strtok(line, " \n");
 	for (i = 0; i < argc; i++)
@@ -71,14 +76,14 @@ int main(void)
 			break;
 		}
 		argv = string_to_words_array(line);
-		if (*argv == NULL)
+		if (argv == NULL)
 		{
 			free(argv);
 			free(line);
 			continue;
 		}
 		fork_and_execute(argv);
-		
+
 		free(argv);
 		free(line);
 	}
