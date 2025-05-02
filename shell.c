@@ -127,12 +127,9 @@ char **string_to_words_array(char *line, int *status)
 	return (argv);
 }
 
-void print_env(char *arg)
+void print_env(void)
 {
 	size_t i = 0;
-
-	if (strcmp(arg, "env") != 0)
-		return;
 	for (i = 0; environ[i]; i++)
 	{
 		printf("%s\n", environ[i]);
@@ -163,7 +160,11 @@ int main(void)
 			free(argv), free(line);
 			continue;
 		}
-		print_env(argv[0]);
+		if (strcmp(argv[0], "env") == 0)
+		{
+			print_env();
+			continue;
+		}
 		if (strcmp(argv[0], "exit") == 0)
 		{
 			free(argv), free(line);
