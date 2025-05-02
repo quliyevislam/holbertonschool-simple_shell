@@ -28,7 +28,7 @@ char *get_path(void)
 }
 
 
-char *search_path_for_command(char *command)
+char *search_path_for_command(char *command, int *status)
 {
 	char *path = NULL;
 	char *path_copy = NULL;
@@ -64,6 +64,7 @@ char *search_path_for_command(char *command)
 		dir = strtok(NULL, ":");
 	}
 	fprintf(stderr, "./hsh: 1: %s: not found\n", command);
+	*status = 127;
 	free(path_copy);
 	return (NULL);
 }
@@ -128,6 +129,7 @@ int main(void)
 	char **argv = NULL;
 	size_t buffer_length = 0;
 	ssize_t input_length = 0;
+	int status = 0;
 
 	while (1)
 	{
@@ -147,7 +149,7 @@ int main(void)
 			free(line);
 			continue;
 		}
-		argv[0] = search_path_for_command(argv[0]);
+		argv[0] = search_path_for_command(argv[0], &status);
 		if (argv[0] == NULL)
 		{
 			free(argv);
@@ -159,5 +161,5 @@ int main(void)
 		free(argv);
 		free(line);
 	}
-	return (0);
+	exit(status);
 }
