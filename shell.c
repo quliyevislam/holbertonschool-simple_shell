@@ -42,7 +42,8 @@ char *search_path_for_command(char *command, int *status)
 	if (strlen(command) == 0)
 		return (NULL);
 
-	if (access(command, F_OK) == 0 && (command[0] == '/' || command[1] == '/'))
+	if (access(command, F_OK) == 0 &&
+		(command[0] == '/' || command[1] == '/' || command[2] == '/'))
 	{
 		full_path = strdup(command);
 		return (full_path);
