@@ -114,7 +114,6 @@ int main(void)
 	{
 		line = NULL;
 		argv = NULL;
-		printf("$ ");
 		input_length = getline(&line, &buffer_length, stdin);
 
 		if (input_length == -1)
