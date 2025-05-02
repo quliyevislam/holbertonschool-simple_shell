@@ -47,7 +47,14 @@ char *search_path_for_command(char *command, int *status)
 		full_path = strdup(command);
 		return (full_path);
 	}
+
 	path = get_path();
+	if (path == NULL)
+	{
+		*status = 127;
+		fprintf(stderr, "./hsh: 1: %s: not found\n", command);
+		return (NULL);
+	}
 	path_copy = strdup(path);
 	dir = strtok(path_copy, ":");
 	while (dir)
