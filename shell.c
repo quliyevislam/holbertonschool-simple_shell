@@ -94,7 +94,7 @@ void fork_and_execute(char **argv)
 	}
 }
 
-char **string_to_words_array(char *line)
+char **string_to_words_array(char *line, int *status)
 {
 	char *line_copy = NULL;
 	char **argv = NULL;
@@ -120,6 +120,9 @@ char **string_to_words_array(char *line)
 	arg = strtok(line, " \n");
 	for (i = 0; i < argc; i++)
 	{
+		if (i != 0 && strcmp(arg, "exit") == 0)
+			*status = 2;
+
 		*(argv + i) = arg;
 		arg = strtok(NULL, " \n");
 	}
@@ -146,7 +149,7 @@ int main(void)
 			free(line);
 			break;
 		}
-		argv = string_to_words_array(line);
+		argv = string_to_words_array(line, &status);
 		if (argv == NULL)
 		{
 			free(argv), free(line);
