@@ -140,6 +140,7 @@ int main(void)
 
 	while (1)
 	{
+		status = 0;
 		line = NULL;
 		argv = NULL;
 		input_length = getline(&line, &buffer_length, stdin);
