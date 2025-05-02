@@ -120,13 +120,13 @@ char **string_to_words_array(char *line, int *status)
 	arg = strtok(line, " \n");
 	for (i = 0; i < argc; i++)
 	{
-		if (i != 0 && strcmp(arg, "exit") == 0)
-			*status = 2;
-
 		*(argv + i) = arg;
 		arg = strtok(NULL, " \n");
 	}
 	argv[i] = NULL;
+	if (strcmp(argv[i - 1], "exit") == 0)
+		*status = 2;
+
 	return (argv);
 }
 
