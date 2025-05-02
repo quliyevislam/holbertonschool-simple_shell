@@ -140,7 +140,6 @@ int main(void)
 
 	while (1)
 	{
-		status = 0;
 		line = NULL;
 		argv = NULL;
 		input_length = getline(&line, &buffer_length, stdin);
@@ -159,6 +158,7 @@ int main(void)
 		if (strcmp(argv[0], "exit") == 0)
 		{
 			free(argv), free(line);
+			status = 0;
 			break;
 		}
 		argv[0] = search_path_for_command(argv[0], &status);
