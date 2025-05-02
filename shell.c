@@ -8,6 +8,26 @@
 #include <errno.h>
 #include "main.h"
 
+char *get_path(void)
+{
+	char **env = environ;
+	char *path = NULL;
+
+	if (env == NULL)
+		return (NULL);
+	while (*env != NULL)
+	{
+		if (strncmp(*env, "PATH=", 5) == 0)
+		{
+			path = *env + 5;
+			return (path);
+		}
+		env++;
+	}
+	return (NULL);
+}
+
+
 char *search_path_for_command(char *command)
 {
 	char *path = NULL;
@@ -26,7 +46,7 @@ char *search_path_for_command(char *command)
 		full_path = strdup(command);
 		return (full_path);
 	}
-	path = getenv("PATH");
+	path = get_path();
 	path_copy = strdup(path);
 	dir = strtok(path_copy, ":");
 	while (dir)
