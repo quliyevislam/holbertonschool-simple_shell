@@ -8,10 +8,57 @@
 #include <errno.h>
 #include "main.h"
 
+char *search_path_for_command(char *command)
+{
+	char *path = NULL;
+	char *path_copy = NULL;
+	char *dir = NULL;
+	char *full_path = NULL;
+	size_t full_path_len = 0;
+
+	if (command == NULL)
+	{
+		return (NULL);
+	}
+
+	if (strlen(command) == 0)
+	{
+		return (NULL);
+	}
+
+	if (access(command, F_OK) == 0 && command[0] == '.' && command[1] == '/')
+	{
+		return (command);
+	}
+
+	path = getenv("PATH");
+	path_copy = strdup(path);
+
+	dir = strtok(path_copy, ":");
+	while (dir)
+	{
+		full_path = malloc(strlen(dir) + strlen(command) + 2);
+		strcpy(full_path, dir);
+		strcat(full_path, "/");
+		strcat(full_path, command);
+		printf("%s\n", full_path);
+		free(full_path);
+		dir = strtok(NULL, ":");
+	}
+
+	free(path_copy);
+	return (NULL);
+}
+
 void fork_and_execute(char **argv)
 {
 	pid_t pid;
 	int status;
+
+	if (argv == NULL)
+	{
+		return;
+	}
 
 	pid = fork();
 	if (pid == 0)
@@ -68,6 +115,7 @@ int main(void)
 	{
 		line = NULL;
 		argv = NULL;
+		printf("$ ");
 		input_length = getline(&line, &buffer_length, stdin);
 
 		if (input_length == -1)
@@ -87,5 +135,6 @@ int main(void)
 		free(argv);
 		free(line);
 	}
+
 	return (0);
 }
