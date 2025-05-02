@@ -63,6 +63,7 @@ char *search_path_for_command(char *command)
 		free(full_path);
 		dir = strtok(NULL, ":");
 	}
+	fprintf(stderr, "./hsh: 1: %s: not found\n", command);
 	free(path_copy);
 	return (NULL);
 }
@@ -151,7 +152,6 @@ int main(void)
 		{
 			free(argv);
 			free(line);
-			puts("Command not found!");
 			continue;
 		}
 		fork_and_execute(argv);
