@@ -14,7 +14,6 @@ char *search_path_for_command(char *command)
 	char *path_copy = NULL;
 	char *dir = NULL;
 	char *full_path = NULL;
-	size_t full_path_len = 0;
 
 	if (command == NULL)
 	{
