@@ -16,23 +16,18 @@ char *search_path_for_command(char *command)
 	char *full_path = NULL;
 
 	if (command == NULL)
-	{
 		return (NULL);
-	}
 
 	if (strlen(command) == 0)
-	{
 		return (NULL);
-	}
 
-	if (access(command, F_OK) == 0 && command[0] == '.' && command[1] == '/')
+	if (access(command, F_OK) == 0)
 	{
-		return (command);
+		full_path = strdup(command);
+		return (full_path);
 	}
-
 	path = getenv("PATH");
 	path_copy = strdup(path);
-
 	dir = strtok(path_copy, ":");
 	while (dir)
 	{
@@ -40,11 +35,14 @@ char *search_path_for_command(char *command)
 		strcpy(full_path, dir);
 		strcat(full_path, "/");
 		strcat(full_path, command);
-		printf("%s\n", full_path);
+		if (access(full_path, F_OK) == 0)
+		{
+			free(path_copy);
+			return (full_path);
+		}
 		free(full_path);
 		dir = strtok(NULL, ":");
 	}
-
 	free(path_copy);
 	return (NULL);
 }
@@ -128,11 +126,18 @@ int main(void)
 			free(line);
 			continue;
 		}
+		argv[0] = search_path_for_command(argv[0]);
+		if (argv[0] == NULL)
+		{
+			free(argv);
+			free(line);
+			puts("Command not found!");
+			continue;
+		}
 		fork_and_execute(argv);
-
+		free(argv[0]);
 		free(argv);
 		free(line);
 	}
-
 	return (0);
 }
