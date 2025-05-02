@@ -154,7 +154,7 @@ int main(void)
 		}
 		if (strcmp(argv[0], "exit") == 0)
 		{
-			free(argv), free(line);
+			free(argv), free(line), status = 2;
 			break;
 		}
 		argv[0] = search_path_for_command(argv[0], &status);
